@@ -1,22 +1,34 @@
 package com.nguyenhuy158.volumecontrol;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSeekBar;
-
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
 
-public class MainActivity extends AppCompatActivity
-		implements SeekBar.OnSeekBarChangeListener {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSeekBar;
+
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 	private AppCompatSeekBar appCompatSeekBar;
-	@Override
+	private AudioManager     audioManager;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
 		bindUI();
+		setDefaultValue();
 		handleEvent();
+	}
+	
+	private void setDefaultValue() {
+		// set max volume
+		int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		appCompatSeekBar.setMax(max);
+		
+		// set current volume into seekbar
+		int current =  audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		appCompatSeekBar.setProgress(current);
 	}
 	
 	private void handleEvent() {
@@ -24,14 +36,18 @@ public class MainActivity extends AppCompatActivity
 	}
 	
 	private void bindUI() {
-		 appCompatSeekBar = findViewById(R.id.seekBarVolume);
+		// ui
+		appCompatSeekBar = findViewById(R.id.seekBarVolume);
+		
+		// other
+		audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 	}
 	
 	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress,
-	                              boolean fromUser) {
-		// Log.d(STRING.TAG, "onProgressChanged: " + progress);
-		
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		Log.d(STRING.TAG, "onProgressChanged: progress = " + progress);
+		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_SHOW_UI);
+		Log.d(STRING.TAG, "onProgressChanged: max = " + audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 	}
 	
 	
