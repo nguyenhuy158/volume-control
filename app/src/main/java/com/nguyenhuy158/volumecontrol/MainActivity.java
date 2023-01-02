@@ -57,6 +57,12 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 	}
 	
 	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		finish();
+	}
+	
+	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		// Log.d(STRING.TAG, "onProgressChanged: progress = " + progress);
 		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_SHOW_UI);
