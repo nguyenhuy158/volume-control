@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.AppCompatSeekBar;
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 	private AppCompatSeekBar appCompatSeekBar;
 	private AudioManager     audioManager;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 		appCompatSeekBar.setMax(max);
 		
 		// set current volume into seekbar
-		int current =  audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		int current = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		appCompatSeekBar.setProgress(current);
 	}
 	
@@ -44,10 +46,21 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 	}
 	
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+			case KeyEvent.KEYCODE_VOLUME_DOWN:
+			case KeyEvent.KEYCODE_VOLUME_UP:
+				setDefaultValue();
+				break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		Log.d(STRING.TAG, "onProgressChanged: progress = " + progress);
+		// Log.d(STRING.TAG, "onProgressChanged: progress = " + progress);
 		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_SHOW_UI);
-		Log.d(STRING.TAG, "onProgressChanged: max = " + audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+		// Log.d(STRING.TAG, "onProgressChanged: max = " + audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
 	}
 	
 	
